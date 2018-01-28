@@ -20,6 +20,7 @@ typedef struct PacketCMD{
 
 class ServoController{
     private:
+        unsigned char servoDirection = 0x00;
         HardwareSerial *hardwareSerial;
         ServoController();
         void calcCheckSum(unsigned char* cmd, int length);
@@ -49,9 +50,9 @@ class ServoController{
         void setThermoLimit(unsigned char servoId, short limit);
         void setNoSignalTorque(unsigned char servoId, short torque);
         void setInitialTime(unsigned char servoId, short time);
-        void setComplianceMergin(unsigned char servoId, unsigned char maegin);
+        void setComplianceMergin(unsigned char servoId, unsigned char cw_mergin, unsigned char ccw_mergin);
         void setComplianceSlope(unsigned char servoId, unsigned char slope);
-        void setPunch(unsigned char servoId, unsigned char punch);
+        void setPunch(unsigned char servoId, unsigned char cw_punch, unsigned char ccw_punch);
 
         short getCurrentAngle(unsigned char servoId);
         int getCurrentTime(unsigned char servoId);
