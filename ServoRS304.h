@@ -32,6 +32,8 @@ class ServoController{
         void clearRxBuffer();
     public:
         ServoController(HardwareSerial *hardwareSerial);
+        void begin();
+        void begin(int baurate);
         void resetServo(unsigned char servoId);
         void restartServo(unsigned char servoId);
         void changeServoId(unsigned char servoId, unsigned char newId);

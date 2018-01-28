@@ -7,9 +7,17 @@
 } */
 
 
-ServoController::ServoController(HardwareSerial *serial){
+ServoController::ServoController(HardwareSerial& serial){
     //TODO If begin serial in this place on Wio LTE, do not work.
-    hardwareSerial = serial;
+    hardwareSerial = &serial;
+}
+
+ServoController::begin(){
+    hardwareSerial->begin(115200);
+}
+
+ServoController::begin(int baurate){
+    hardwareSerial->begin();
 }
 
 //private 
