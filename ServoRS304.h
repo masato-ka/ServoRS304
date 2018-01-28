@@ -30,10 +30,14 @@ class ServoController{
         PacketCMD* returnPakcetFactory(unsigned char servoId, unsigned char flag, unsigned char headerAddr, \
         unsigned char dataLength, unsigned char *data);
         void clearRxBuffer();
+        void setShortPacketHeader(unsigned char *cmd, unsigned char servoId, \
+        unsigned char flag, unsigned char address);
+        setShortPacketData(unsigned char *cmd, int length , unsigned char *data);
     public:
         ServoController(HardwareSerial *hardwareSerial);
         void begin();
         void begin(int baurate);
+        void end();
         void resetServo(unsigned char servoId);
         void restartServo(unsigned char servoId);
         void changeServoId(unsigned char servoId, unsigned char newId);

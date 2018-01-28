@@ -20,6 +20,28 @@ ServoController::begin(int baurate){
     hardwareSerial->begin();
 }
 
+ServoController::end(){
+    hardwareSerial->end();
+}
+
+ServoController::setShortPacketHeader(unsigned char *cmd, unsigned char servoId, \
+    unsigned char flag, unsigned char address){
+    cmd[0] = 0xFA;
+    cmd[1] = 0xAF;
+    cmd[2] = servoId;
+    cmd[3] = flag;
+    cmd[4] = address;
+}
+
+ServoController::setShortPacketData(unsigned char *cmd, int length , unsigned char *data){
+    cmd[5] = (unsigned char)0x00FF & angle;
+    cmd[6] = 0x01;
+    for(int i=0; i < length; i++){
+        cmd[7+i] = data[i];
+    }
+}
+
+
 //private 
 void ServoController::calcCheckSum(unsigned char *cmd, int length){
     unsigned char checkSum = 0;
@@ -92,7 +114,7 @@ void ServoController::restartServo(unsigned char servoId){
 }
 
 void ServoController::changeServoId(unsigned char servoId, unsigned char newServoId) {
-    unsigned char cmd[8];
+    unsigned char cmd[9];
     cmd[0] = 0xFA;
     cmd[1] = 0xAF;
     cmd[2] = servoId;
@@ -101,8 +123,8 @@ void ServoController::changeServoId(unsigned char servoId, unsigned char newServ
     cmd[5] = 0x01;
     cmd[6] = 0x01;//TODO When do change it.
     cmd[7] = newServoId;
-    calcCheckSum(cmd,8);
-    sendCommand(cmd,8);
+    calcCheckSum(cmd,9);
+    sendCommand(cmd,9);
 }
 
 void ServoController::reverseServoDirection(unsigned char servoId){
