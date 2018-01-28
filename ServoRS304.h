@@ -32,7 +32,7 @@ class ServoController{
         void clearRxBuffer();
         void setShortPacketHeader(unsigned char *cmd, unsigned char servoId, \
         unsigned char flag, unsigned char address);
-        setShortPacketData(unsigned char *cmd, int length , unsigned char *data);
+        void setShortPacketData(unsigned char *cmd, int length , unsigned char *data);
     public:
         ServoController(HardwareSerial *hardwareSerial);
         void begin();
