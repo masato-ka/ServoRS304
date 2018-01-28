@@ -46,7 +46,7 @@ class ServoController{
         void changeUSARTSpeed(unsigned char servoId, unsigned char speed);
         void setPacketReturnTime(unsigned char servoId, unsigned char time);
         void setMaxTorque(unsigned char servoId, unsigned char torque);
-        void setAngleLimit(unsigned char servoId, short angleLimit);
+        void setAngleLimit(unsigned char servoId, short cw_angleLimit, short ccw_angleLimit);
         void setThermoLimit(unsigned char servoId, short limit);
         void setNoSignalTorque(unsigned char servoId, short torque);
         void setInitialTime(unsigned char servoId, short time);

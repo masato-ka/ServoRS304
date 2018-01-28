@@ -123,6 +123,18 @@ void ServoController::changeServoId(unsigned char servoId, unsigned char newServ
     sendCommand(cmd,9);
 }
 
+void ServoController::changeUSARTSpeed(unsignd char servoId, unsigned char speed){
+    unsigned char cmd[9];
+    unsigned char data[1];
+    if(0x05 <= speed && speed <= 0x09){
+        data[0] = speed;
+    }else{
+        data[0] = 0x07;
+    }
+    setShortPacketHeader(cmd, servoId, 0x00, 0x06);
+    setShortPacketData(cmd, 1, data);
+}
+
 void ServoController::reverseServoDirection(unsigned char servoId){
     unsigned char cmd[9];
     unsigned char data[1];
@@ -146,6 +158,19 @@ void ServoController::setPacketReturnTime(unsigned char servoId, unsigned char t
     setShortPacketHeader(cmd, 1, data);
     calcCheckSum(cmd, 9);
     sendCommand(cmd, 9);
+}
+
+void ServoController::setAngleLimit(unsigned char servoId, short cw_angleLimit, short ccw_angleLimit){
+    unsigned char cmd[12];
+    unsigned char data[4];
+    data[0] = (unsigned char) 0x00FF & cw_angleLimist;
+    data[1] = (unsigned char) 0x00FF & (cw_angleLimist >> 8);
+    data[2] = (unsigned char) 0x00FF & ccw_angleLimist;
+    data[3] = (unsigned char) 0x00FF & (ccw_angleLimist >> 8);
+    setShortPacketHeader(cmd, servoId, 0x00, 0x08);
+    setShortPacketData(cmd, 4, data);
+    calcCheckSum(cmd,12);
+    sendCommand(cmd, 12);
 }
 
 void ServoController::setComplianceMergin(unsigned char servoId, unsigned char cw_mergin, unsigned char ccw_mergin){
@@ -235,7 +260,7 @@ void ServoController::breakTorque(unsigned char servoId){
 void ServoController::moveServo(unsigned char servoId, int angle, int speed){
     unsigned char cmd[12]; //送信データバッファ [10byte]
     unsigned char data[4];
-    // Angle
+    // Angle 
     data[0] = (unsigned char)0x00FF & angle; // Low byte
     data[1] = (unsigned char)0x00FF & (angle >> 8); //Hi byte
     // Speed
