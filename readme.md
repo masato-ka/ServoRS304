@@ -15,14 +15,12 @@ Servo and Arduino connect using 3-state circuit.
 ``` c++
 ServoController servoController(&Serial);
 void setup() {
-  HardwareSerial *serial;
-  serial = &Serial;
-  serial->begin(115200);
+  servoController.begin();
   delay(500);
 }
 ```
 
-## 
+## Move sarvo and get current angle.
 
 ``` c++
 void loop() {
