@@ -13,11 +13,37 @@ const int headerAddressIndex = 4;
 const int headerDataLengthIndex = 5;
 const int headerCntIndex = 6;
 
-const unsigned char headerFA = 0xFA;
-const unsigned char headerAF = 0xAF;
+const unsigned char FA = 0xFA;
+const unsigned char AF = 0xAF;
+
+const unsigned char WRITE_FLAG = 0x00;
+const unsigned char REQUEST_FLAG = 0x09;
+const unsigned char RESET_FLAG = 0x10;
+const unsigned char RESET_ADDRESS = 0xFF;
+const unsigned char RESET_DATALENGTH = 0xFF;
+const unsigned char RESET_CNT = 0x00;
+const unsigned char REST_DATA = 0xFF;
+const unsigned char RESTART_FLAG = 0x20;
+const unsigned char RESTART_ADDRESS = 0xFF;
+const unsigned char SERVOID_ADDRESS = 0x04;
+const unsigned char SERVODIRECTION_ADDRESS = 0x05;
+const unsigned char USARTSPEED_ADDRESS = 0x06;
+const unsigned char DELAYTIME_ADDRESS = 0x07;
+const unsigned char ANGLELIMIT_ADDRESS = 0x08;
+const unsigned char MERGIN_ADDRESS = 0x18;
+const unsigned char SLOPE_ADDRESS = 0x1A;
+const unsigned char PUNCH_ADDRESS = 0x1C;
+const unsigned char TORQUE_ADDRESS = 0x24;
+const unsigned char ANGLE_ADDRESS = 0x1E;
 
 const int packetHeaderSize = 7;
 const int packetCheckSumSize = 1;
+const int returnRequestPacketSize = packetHeaderSize + packetCheckSumSize;
+const int returnPacketSize = 26;
+
+const unsigned char TORQUE_ON = 0x01;
+const unsigned char TORQUE_OFF = 0x00;
+const unsigned char TORQUE_BREAK = 0x02;
 
 typedef struct PacketCMD{
 
