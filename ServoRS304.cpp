@@ -131,6 +131,7 @@ void ServoController::changeUSARTSpeed(unsignd char servoId, unsigned char speed
     }else{
         data[0] = 0x07;
     }
+    usartSpeed = data[0];
     setShortPacketHeader(cmd, servoId, 0x00, 0x06);
     setShortPacketData(cmd, 1, data);
 }
@@ -153,7 +154,8 @@ void ServoController::reverseServoDirection(unsigned char servoId){
 void ServoController::setPacketReturnTime(unsigned char servoId, unsigned char time){
     unsigned char cmd[9];
     unsigned char data[1];
-    data[0] = time;
+    returnDelayTime = time;
+    data[0] = returnDelayTime;
     setShortPacketHeader(cmd, servoId, 0x60, 0x07);
     setShortPacketHeader(cmd, 1, data);
     calcCheckSum(cmd, 9);
@@ -214,6 +216,52 @@ short ServoController::getCurrentAngle(unsigned char id){
     short angle =  ((msb << 8) | lsb);
     return angle;
 }
+
+int ServoController::getCurrentTime(unsigned char id){
+    unsigned char memory[26];
+    getMemoryMap(id, memory);
+    short msb = (short) memory[10] & 0xffff;
+    short lsb = (short) memory[9] & 0xffff;
+    short currentTime = ((msb<<8) | lsb);
+    return currentTime * 10;// 10ms
+}
+
+short ServoController::getCurrentSpeed(unsigned char id){
+    unsigned char memory[26];
+    getMemoryMap(id, memory);
+    short msb = (short) memory[12] & 0xffff;
+    short lsb = (short) memory[11] & 0xffff;
+    short currentSpeed = ((msb<<8) | lsb);
+    return currentSpeed;
+}
+
+short ServoController::getCurrentServoLoad(unsigned char id){
+        unsigned char memory[26];
+    getMemoryMap(id, memory);
+    short msb = (short) memory[14] & 0xffff;
+    short lsb = (short) memory[13] & 0xffff;
+    short currentLoad = ((msb<<8) | lsb);
+    return currentLoad;// 10ms
+}
+
+short ServoController::getCurrentThermo(unsigned char id){
+    unsigned char memory[26];
+    getMemoryMap(id, memory);
+    short msb = (short) memory[16] & 0xffff;
+    short lsb = (short) memory[15] & 0xffff;
+    short currentThermo = ((msb<<8) | lsb);
+    return currentThermo;// 10ms
+}
+
+float ServoController::getCurrentVoltage(unsigned char id){
+        unsigned char memory[26];
+    getMemoryMap(id, memory);
+    short msb = (short) memory[18] & 0xffff;
+    short lsb = (short) memory[17] & 0xffff;
+    short currentVoltage = ((msb<<8) | lsb);
+    return currentVoltage * 0.01;// 10ms
+}
+
 
 void ServoController::turnOnTorque(unsigned char servoId){
     unsigned char cmd[9];

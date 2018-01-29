@@ -21,6 +21,8 @@ typedef struct PacketCMD{
 class ServoController{
     private:
         unsigned char servoDirection = 0x00;
+        unsigned char usartSpeed = 0x05;
+        unsigned char returnDelayTime = 0x00;
         HardwareSerial *hardwareSerial;
         ServoController();
         void calcCheckSum(unsigned char* cmd, int length);
@@ -39,6 +41,7 @@ class ServoController{
         void begin();
         void begin(int baurate);
         void end();
+        void initializeServo();
         void resetServo(unsigned char servoId);
         void restartServo(unsigned char servoId);
         void changeServoId(unsigned char servoId, unsigned char newId);
