@@ -12,32 +12,32 @@ ServoController::ServoController(HardwareSerial& serial){
     hardwareSerial = &serial;
 }
 
-ServoController::begin(){
+void ServoController::begin(){
     hardwareSerial->begin(115200);
 }
 
-ServoController::begin(int baurate){
-    hardwareSerial->begin();
+void ServoController::begin(int baurate){
+    hardwareSerial->begin(baurate);
 }
 
-ServoController::end(){
+void ServoController::end(){
     hardwareSerial->end();
 }
 
-ServoController::setShortPacketHeader(unsigned char *cmd, unsigned char servoId, \
+void ServoController::setShortPacketHeader(unsigned char *cmd, unsigned char servoId, \
     unsigned char flag, unsigned char address){
-    cmd[0] = 0xFA;
-    cmd[1] = 0xAF;
-    cmd[2] = servoId;
-    cmd[3] = flag;
-    cmd[4] = address;
+    cmd[headerFAIndex] = headerFA;
+    cmd[headerAFIndex] = headerAF;
+    cmd[headerIdIndex] = servoId;
+    cmd[headerFlagIndex] = flag;
+    cmd[headerAddressIndex] = address;
 }
 
-ServoController::setShortPacketData(unsigned char *cmd, int length , unsigned char *data){
-    cmd[5] = (unsigned char)0x00FF & angle;
-    cmd[6] = 0x01;
+void ServoController::setShortPacketData(unsigned char *cmd, int length , unsigned char *data){
+    cmd[headerDataLengthIndex] = (unsigned char)0x00FF & length;
+    cmd[headerCntIndex] = 0x01;
     for(int i=0; i < length; i++){
-        cmd[7+i] = data[i];
+        cmd[packetHeaderSize+i] = data[i];
     }
 }
 
@@ -46,7 +46,7 @@ ServoController::setShortPacketData(unsigned char *cmd, int length , unsigned ch
 void ServoController::calcCheckSum(unsigned char *cmd, int length){
     unsigned char checkSum = 0;
 //    int length = sizeof(cmd)/sizeof(unsigned char)
-    for(int i=2; i < length - 1; i++ ){
+    for(int i = headerIdIndex; i < length - packetCheckSumSize; i++ ){
         checkSum = checkSum ^ cmd [i];
     }
     cmd[length-1] = checkSum;
@@ -123,7 +123,7 @@ void ServoController::changeServoId(unsigned char servoId, unsigned char newServ
     sendCommand(cmd,9);
 }
 
-void ServoController::changeUSARTSpeed(unsignd char servoId, unsigned char speed){
+void ServoController::changeUSARTSpeed(unsigned char servoId, unsigned char speed){
     unsigned char cmd[9];
     unsigned char data[1];
     if(0x05 <= speed && speed <= 0x09){
@@ -134,6 +134,8 @@ void ServoController::changeUSARTSpeed(unsignd char servoId, unsigned char speed
     usartSpeed = data[0];
     setShortPacketHeader(cmd, servoId, 0x00, 0x06);
     setShortPacketData(cmd, 1, data);
+    calcCheckSum(cmd, 9);
+    sendCommand(cmd, 9);
 }
 
 void ServoController::reverseServoDirection(unsigned char servoId){
@@ -145,7 +147,7 @@ void ServoController::reverseServoDirection(unsigned char servoId){
         data[0] = 0x00;
     }
     setShortPacketHeader(cmd, servoId, 0x00, 0x05);
-    setShortPacketHeader(cmd, 1, data);
+    setShortPacketData(cmd, 1, data);
     //cmd[6] = 0x01;//TODO reverse if after get current servo direction.
     calcCheckSum(cmd, 9);
     sendCommand(cmd, 9);
@@ -157,7 +159,7 @@ void ServoController::setPacketReturnTime(unsigned char servoId, unsigned char t
     returnDelayTime = time;
     data[0] = returnDelayTime;
     setShortPacketHeader(cmd, servoId, 0x60, 0x07);
-    setShortPacketHeader(cmd, 1, data);
+    setShortPacketData(cmd, 1, data);
     calcCheckSum(cmd, 9);
     sendCommand(cmd, 9);
 }
@@ -165,10 +167,10 @@ void ServoController::setPacketReturnTime(unsigned char servoId, unsigned char t
 void ServoController::setAngleLimit(unsigned char servoId, short cw_angleLimit, short ccw_angleLimit){
     unsigned char cmd[12];
     unsigned char data[4];
-    data[0] = (unsigned char) 0x00FF & cw_angleLimist;
-    data[1] = (unsigned char) 0x00FF & (cw_angleLimist >> 8);
-    data[2] = (unsigned char) 0x00FF & ccw_angleLimist;
-    data[3] = (unsigned char) 0x00FF & (ccw_angleLimist >> 8);
+    data[0] = (unsigned char) 0x00FF & cw_angleLimit;
+    data[1] = (unsigned char) 0x00FF & (cw_angleLimit >> 8);
+    data[2] = (unsigned char) 0x00FF & ccw_angleLimit;
+    data[3] = (unsigned char) 0x00FF & (ccw_angleLimit >> 8);
     setShortPacketHeader(cmd, servoId, 0x00, 0x08);
     setShortPacketData(cmd, 4, data);
     calcCheckSum(cmd,12);
@@ -191,7 +193,7 @@ void ServoController::setComplianceSlope(unsigned char servoId, unsigned char cw
     unsigned char cmd[10];
     unsigned char data[2];
     data[0] = cw_slope;
-    data[1] = ccw_slpe;
+    data[1] = ccw_slope;
     setShortPacketHeader(cmd, servoId, 0x00, 0x1A);
     setShortPacketData(cmd, 2, data);
     calcCheckSum(cmd, 10);
@@ -203,9 +205,10 @@ void ServoController::setPunch(unsigned char servoId, unsigned char cw_punch, un
     unsigned char data[2];
     data[0] = cw_punch;
     data[1] = ccw_punch;
-    setShortPacketHaeder(cmd, servoId, 0x00, 0x1C);
+    setShortPacketHeader(cmd, servoId, 0x00, 0x1C);
     setShortPacketData(cmd, 2, data);
     calcCheckSum(cmd, 10);
+    sendCommand(cmd, 10);
 }
 
 short ServoController::getCurrentAngle(unsigned char id){
