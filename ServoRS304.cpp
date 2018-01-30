@@ -318,7 +318,7 @@ void ServoController::moveServo(unsigned char servoId, int angle, int speed){
     // Speed
     data[2] = (unsigned char)0x00FF & speed; // Low byte
     data[3] = (unsigned char)0x00FF & (speed >> 8); //Hi byte 
-    setShortPacketHeader(cmd, servoId, WRITE_FLAG, ANGLELIMIT_ADDRESS);
+    setShortPacketHeader(cmd, servoId, WRITE_FLAG, ANGLE_ADDRESS);
     setShortPacketData(cmd, dataSize, data);
     calcCheckSum(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
     sendCommand(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
