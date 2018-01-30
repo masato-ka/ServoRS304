@@ -1,11 +1,12 @@
-#include<ServoRS304.h>
-/* PacketCMD* ServoController::shortPacketFactory(unsigned char servoId, unsigned char flag, unsigned char headerAddr, \
-        unsigned char dataLength, unsigned char *data){
-    packet_cmd p = {""};
-    
-    
-} */
+/*
+ServoRS304.cpp
+author masato-ka
+Date 2018/01/31
+License is LGPL 2.1
+Copyright © 2018 Masato Kawamura. All rights reserved.
+*/
 
+#include<ServoRS304.h>
 
 ServoController::ServoController(HardwareSerial& serial){
     //TODO If begin serial in this place on Wio LTE, do not work.

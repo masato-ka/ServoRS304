@@ -57,3 +57,5 @@ Please show example folder.
  * Twitter: @masato-ka
  * Blog: http://masato-ka.hatenablog.com/
  * E-mail: jp6uzv(at)gmail.com
+
+ Copyright © 2018 Masato Kawamura. All rights reserved.

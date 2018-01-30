@@ -1,3 +1,11 @@
+/*
+ServoRS304.h
+author masato-ka
+Date 2018/01/31
+License is LGPL 2.1
+Copyright © 2018 Masato Kawamura. All rights reserved.
+*/
+
 #ifndef ServoRS304_h
 #define ServoRS304_h
 
