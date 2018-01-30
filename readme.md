@@ -15,7 +15,7 @@ Servo and Arduino connect using 3-state circuit.
 ``` c++
 ServoController servoController(&Serial);
 void setup() {
-  servoController.begin();
+  servoController.begin(115200);
   delay(500);
 }
 ```
@@ -45,11 +45,15 @@ void loop() {
 }
 ```
 
+Please show example folder.
 
-# Configuration
+# License
 
-TODO.
+* Licensed under the GNU LESSER GENERAL PUBLIC LICENSE Version 2.1
+
 
 # Author
-Twitter: @masato-ka
-e-mail: jp6uzv@gmail.com
+
+ * Twitter: @masato-ka
+ * Blog: http://masato-ka.hatenablog.com/
+ * E-mail: jp6uzv(at)gmail.com
