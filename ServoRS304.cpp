@@ -212,6 +212,17 @@ void ServoController::setPunch(unsigned char servoId, unsigned char cw_punch, un
     sendCommand(cmd, packetHeaderSize+packetCheckSumSize+dataSize);
 }
 
+void ServoController::setMaxTorque(unsigned char servoId, unsigned char torque){
+    const int dataSize = 1;
+    unsigned char cmd[packetHeaderSize + packetCheckSumSize + dataSize];
+    unsigned char data[dataSize];
+    data[0] = torque;
+    setShortPacketHeader(cmd, servoId, WRITE_FLAG, MAXTORQUE_ADDRESS);
+    setShortPacketData(cmd, dataSize, data);
+    calcCheckSum(cmd, packetHeaderSize+ packetCheckSumSize+dataSize);
+    sendCommand(cmd, packetHeaderSize+ packetCheckSumSize + dataSize);
+}
+
 short ServoController::getCurrentAngle(unsigned char id){
     const int dataSize = 18;
     unsigned char memory[packetHeaderSize+packetCheckSumSize+dataSize];

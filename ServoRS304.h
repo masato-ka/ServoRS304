@@ -42,7 +42,9 @@ const unsigned char MERGIN_ADDRESS = 0x18;
 const unsigned char SLOPE_ADDRESS = 0x1A;
 const unsigned char PUNCH_ADDRESS = 0x1C;
 const unsigned char TORQUE_ADDRESS = 0x24;
+const unsigned char MAXTORQUE_ADDRESS = 0x23;
 const unsigned char ANGLE_ADDRESS = 0x1E;
+
 
 const int packetHeaderSize = 7;
 const int packetCheckSumSize = 1;
