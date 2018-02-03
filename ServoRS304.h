@@ -1,7 +1,7 @@
 /*
 ServoRS304.h
 author masato-ka
-Date 2018/01/31
+Date 2018/02/03
 License is LGPL 2.1
 Copyright © 2018 Masato Kawamura. All rights reserved.
 */
@@ -55,6 +55,10 @@ const unsigned char TORQUE_ON = 0x01;
 const unsigned char TORQUE_OFF = 0x00;
 const unsigned char TORQUE_BREAK = 0x02;
 
+const int uartspeed_set[10] = {9600, 14400, 19200, 28800, 38400, 57600, 76800, 115200, 153600, 230400};
+const int BIT_PER_BYTE = 8;
+const int MICROSECOND = 1000000;
+
 typedef struct PacketCMD{
 
     unsigned char header[2];
@@ -71,7 +75,8 @@ typedef struct PacketCMD{
 class ServoController{
     private:
         unsigned char servoDirection = 0x00;
-        unsigned char usartSpeed = 0x05;
+        unsigned char usartSpeed = 0x07;
+        float sendDelayUSTimeOneByte = (1 / usartspeed_set[usartSpeed]) * BIT_PER_BYTE * MICROSECOND;
         unsigned char returnDelayTime = 0x00;
         HardwareSerial *hardwareSerial;
         ServoController();

@@ -1,7 +1,7 @@
 /*
 ServoRS304.cpp
 author masato-ka
-Date 2018/01/31
+Date 2018/02/03
 License is LGPL 2.1
 Copyright © 2018 Masato Kawamura. All rights reserved.
 */
@@ -56,8 +56,10 @@ void ServoController::calcCheckSum(unsigned char *cmd, int length){
 //TODO Serail servo controller class 
 //private 
 void ServoController::sendCommand(unsigned char *cmd, int length){
+    const int oneByteBit = 8;
     hardwareSerial->write(cmd,length);
-    delay(1);
+    int delayTime = sendDelayUSTimeOneByte * length;
+    delayMicroseconds(delayTime + 1000);
 }
 
 
@@ -104,6 +106,9 @@ void ServoController::restartServo(unsigned char servoId){
     setShortPacketData(cmd , dataSize, NULL);
     calcCheckSum(cmd, packetHeaderSize + packetCheckSumSize);
     sendCommand(cmd, packetHeaderSize + packetCheckSumSize);
+
+    sendDelayUSTimeOneByte = (1 / usartspeed_set[usartSpeed]) * BIT_PER_BYTE * MICROSECOND;
+
 }
 
 void ServoController::changeServoId(unsigned char servoId, unsigned char newServoId) {
@@ -292,7 +297,6 @@ void ServoController::turnOnTorque(unsigned char servoId){
     setShortPacketData(cmd, dataSize, data);
     calcCheckSum(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
     sendCommand(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
-    delay(1);
     clearRxBuffer();    
 }
 
@@ -304,7 +308,6 @@ void ServoController::turnOffTorque(unsigned char servoId){
     setShortPacketData(cmd, dataSize, data);
     calcCheckSum(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
     sendCommand(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
-    delay(1);
     clearRxBuffer();    
 }
 
@@ -316,7 +319,6 @@ void ServoController::breakTorque(unsigned char servoId){
     setShortPacketData(cmd, dataSize, data);
     calcCheckSum(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
     sendCommand(cmd,packetHeaderSize+packetCheckSumSize+dataSize);
-    delay(1);
     clearRxBuffer();    
 }
 
