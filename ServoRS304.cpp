@@ -17,7 +17,7 @@ void ServoController::begin(){
     hardwareSerial->begin(115200);
 }
 
-void ServoController::begin(int baurate){
+void ServoController::begin(long baurate){
     hardwareSerial->begin(baurate);
 }
 

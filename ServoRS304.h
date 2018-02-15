@@ -55,7 +55,7 @@ const unsigned char TORQUE_ON = 0x01;
 const unsigned char TORQUE_OFF = 0x00;
 const unsigned char TORQUE_BREAK = 0x02;
 
-const int uartspeed_set[10] = {9600, 14400, 19200, 28800, 38400, 57600, 76800, 115200, 153600, 230400};
+const long uartspeed_set[10] = {9600, 14400, 19200, 28800, 38400, 57600, 76800, 115200, 153600, 230400};
 const int BIT_PER_BYTE = 8;
 const int MICROSECOND = 1000000;
 
@@ -93,7 +93,7 @@ class ServoController{
     public:
         ServoController(HardwareSerial& hardwareSerial);
         void begin();
-        void begin(int baurate);
+        void begin(long baurate);
         void end();
         void initializeServo();
         void resetServo(unsigned char servoId);
