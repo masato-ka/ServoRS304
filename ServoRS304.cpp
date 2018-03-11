@@ -85,6 +85,23 @@ void ServoController::getMemoryMap(unsigned char servoId, unsigned char *buffer)
     memcpy(buffer, &readRaw[returnRequestPacketSize], returnPacketSize);
 }
 
+void ServoController::getRomMemoryMap(unsigned char servoId, unsigned char *buffer){
+    unsigned char cmd[returnRequestPacketSize];
+    unsigned char checkSum = 0;
+
+    setShortPacketHeader(cmd, servoId, ROM_REQUEST_FLAG, 0x00);
+    setShortPacketData(cmd, 0, NULL);
+    calcCheckSum(cmd, returnRequestPacketSize);
+    sendCommand(cmd, returnRequestPacketSize);
+    delay(17);//TODO change parameter with return packet delay time and baudrate of USART.
+    unsigned char readRaw[returnPacketSize+returnRequestPacketSize];
+    int i = 0;
+    while(hardwareSerial->available() > 0){
+        readRaw[i++] = hardwareSerial->read();
+    }
+    memcpy(buffer, &readRaw[returnRequestPacketSize], returnPacketSize);
+}
+
 void ServoController::resetServo(unsigned char servoId){
     const int dataSize = 1;
     unsigned char cmd[packetHeaderSize+packetHeaderSize+dataSize];
@@ -226,6 +243,14 @@ void ServoController::setMaxTorque(unsigned char servoId, unsigned char torque){
     setShortPacketData(cmd, dataSize, data);
     calcCheckSum(cmd, packetHeaderSize+ packetCheckSumSize+dataSize);
     sendCommand(cmd, packetHeaderSize+ packetCheckSumSize + dataSize);
+}
+
+short ServoController::getCurrentReturnDelay(unsigned char id){
+    const int dataSize = 30;
+    unsigned char memory[packetHeaderSize+packetCheckSumSize+dataSize];
+    getRomMemoryMap(id, memory);
+    short delayVal = (short)memory[14] & 0xffff;
+    return delayVal;
 }
 
 short ServoController::getCurrentAngle(unsigned char id){

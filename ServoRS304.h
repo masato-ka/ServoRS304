@@ -25,6 +25,7 @@ const unsigned char FA = 0xFA;
 const unsigned char AF = 0xAF;
 
 const unsigned char WRITE_FLAG = 0x00;
+const unsigned char ROM_REQUEST_FLAG = 0x03;
 const unsigned char REQUEST_FLAG = 0x09;
 const unsigned char RESET_FLAG = 0x10;
 const unsigned char RESET_ADDRESS = 0xFF;
@@ -83,6 +84,7 @@ class ServoController{
         void calcCheckSum(unsigned char* cmd, int length);
         void sendCommand(unsigned char *cmd, int length);
         void getMemoryMap(unsigned char id, unsigned char * buffer);
+        void getRomMemoryMap(unsigned char id, unsigned char * buffer);
         PacketCMD* shortPacketFactory(unsigned char servoId, unsigned char flag, unsigned char headerAddr, \
         unsigned char dataLength, unsigned char *data);
         PacketCMD* returnPakcetFactory(unsigned char servoId, unsigned char flag, unsigned char headerAddr, \
@@ -111,6 +113,7 @@ class ServoController{
         void setComplianceSlope(unsigned char servoId, unsigned char cw_slope, unsigned char ccw_slope);
         void setPunch(unsigned char servoId, unsigned char cw_punch, unsigned char ccw_punch);
 
+        short getCurrentReturnDelay(unsigned char servoId);
         short getCurrentAngle(unsigned char servoId);
         int getCurrentTime(unsigned char servoId);
         short getCurrentSpeed(unsigned char servoId);
