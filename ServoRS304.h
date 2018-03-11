@@ -45,6 +45,8 @@ const unsigned char PUNCH_ADDRESS = 0x1C;
 const unsigned char TORQUE_ADDRESS = 0x24;
 const unsigned char MAXTORQUE_ADDRESS = 0x23;
 const unsigned char ANGLE_ADDRESS = 0x1E;
+const unsigned char WRITE_FLASHROM_FLAG = 0x40;
+const unsigned char WRITE_FLASHROM_ADDRESS = 0xFF;
 
 
 const int packetHeaderSize = 7;
@@ -92,6 +94,7 @@ class ServoController{
         void clearRxBuffer();
         void setShortPacketHeader(unsigned char *cmd, unsigned char servoId, unsigned char flag, unsigned char address);
         void setShortPacketData(unsigned char *cmd, int length , unsigned char *data);
+        void setZeroPacketData(unsigned char *cmd);
     public:
         ServoController(HardwareSerial& hardwareSerial);
         void begin();
@@ -101,6 +104,7 @@ class ServoController{
         void resetServo(unsigned char servoId);
         void restartServo(unsigned char servoId);
         void changeServoId(unsigned char servoId, unsigned char newId);
+        void saveFlashRom(unsigned char servoId);
         void reverseServoDirection(unsigned char servoId);
         void changeUSARTSpeed(unsigned char servoId, unsigned char speed);
         void setPacketReturnTime(unsigned char servoId, unsigned char time);

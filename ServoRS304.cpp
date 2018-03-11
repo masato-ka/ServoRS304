@@ -42,6 +42,11 @@ void ServoController::setShortPacketData(unsigned char *cmd, int length , unsign
     }
 }
 
+void ServoController::setZeroPacketData(unsigned char *cmd){
+    cmd[headerDataLengthIndex] = 0x00;
+    cmd[headerCntIndex] = 0x00;
+}
+
 
 //private 
 void ServoController::calcCheckSum(unsigned char *cmd, int length){
@@ -137,6 +142,14 @@ void ServoController::changeServoId(unsigned char servoId, unsigned char newServ
     setShortPacketData(cmd, dataSize, data);
     calcCheckSum(cmd,packetHeaderSize + packetCheckSumSize + dataSize);
     sendCommand(cmd,packetHeaderSize + packetCheckSumSize + dataSize);
+}
+
+void ServoController::saveFlashRom(unsigned char servoId){
+    unsigned char cmd[packetHeaderSize + packetCheckSumSize];
+    setShortPacketHeader(cmd,servoId, WRITE_FLASHROM_FLAG, WRITE_FLASHROM_ADDRESS);
+    setZeroPacketData(cmd);
+    calcCheckSum(cmd,packetHeaderSize + packetCheckSumSize);
+    sendCommand(cmd,packetHeaderSize + packetCheckSumSize);
 }
 
 void ServoController::changeUSARTSpeed(unsigned char servoId, unsigned char speed){
