@@ -113,13 +113,13 @@ void ServoController::restartServo(unsigned char servoId){
 
 void ServoController::changeServoId(unsigned char servoId, unsigned char newServoId) {
     const int dataSize = 1;
-    unsigned char cmd[packetHeaderSize + packetHeaderSize + dataSize];
+    unsigned char cmd[packetHeaderSize + packetCheckSumSize + dataSize];
     unsigned char data[dataSize];
     data[0] = newServoId;
     setShortPacketHeader(cmd,servoId, WRITE_FLAG, SERVOID_ADDRESS);
     setShortPacketData(cmd, dataSize, data);
-    calcCheckSum(cmd,packetHeaderSize + packetHeaderSize + dataSize);
-    sendCommand(cmd,packetHeaderSize + packetHeaderSize + dataSize);
+    calcCheckSum(cmd,packetHeaderSize + packetCheckSumSize + dataSize);
+    sendCommand(cmd,packetHeaderSize + packetCheckSumSize + dataSize);
 }
 
 void ServoController::changeUSARTSpeed(unsigned char servoId, unsigned char speed){
