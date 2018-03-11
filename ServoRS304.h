@@ -25,6 +25,7 @@ const unsigned char FA = 0xFA;
 const unsigned char AF = 0xAF;
 
 const unsigned char WRITE_FLAG = 0x00;
+const unsigned char ROM_REQUEST_FLAG = 0x03;
 const unsigned char REQUEST_FLAG = 0x09;
 const unsigned char RESET_FLAG = 0x10;
 const unsigned char RESET_ADDRESS = 0xFF;
@@ -44,6 +45,8 @@ const unsigned char PUNCH_ADDRESS = 0x1C;
 const unsigned char TORQUE_ADDRESS = 0x24;
 const unsigned char MAXTORQUE_ADDRESS = 0x23;
 const unsigned char ANGLE_ADDRESS = 0x1E;
+const unsigned char WRITE_FLASHROM_FLAG = 0x40;
+const unsigned char WRITE_FLASHROM_ADDRESS = 0xFF;
 
 
 const int packetHeaderSize = 7;
@@ -55,7 +58,7 @@ const unsigned char TORQUE_ON = 0x01;
 const unsigned char TORQUE_OFF = 0x00;
 const unsigned char TORQUE_BREAK = 0x02;
 
-const long uartspeed_set[10] = {9600, 14400, 19200, 28800, 38400, 57600, 76800, 115200, 153600, 230400};
+const long usartspeed_set[10] = {9600, 14400, 19200, 28800, 38400, 57600, 76800, 115200, 153600, 230400};
 const int BIT_PER_BYTE = 8;
 const int MICROSECOND = 1000000;
 
@@ -83,6 +86,7 @@ class ServoController{
         void calcCheckSum(unsigned char* cmd, int length);
         void sendCommand(unsigned char *cmd, int length);
         void getMemoryMap(unsigned char id, unsigned char * buffer);
+        void getRomMemoryMap(unsigned char id, unsigned char * buffer);
         PacketCMD* shortPacketFactory(unsigned char servoId, unsigned char flag, unsigned char headerAddr, \
         unsigned char dataLength, unsigned char *data);
         PacketCMD* returnPakcetFactory(unsigned char servoId, unsigned char flag, unsigned char headerAddr, \
@@ -90,6 +94,7 @@ class ServoController{
         void clearRxBuffer();
         void setShortPacketHeader(unsigned char *cmd, unsigned char servoId, unsigned char flag, unsigned char address);
         void setShortPacketData(unsigned char *cmd, int length , unsigned char *data);
+        void setZeroPacketData(unsigned char *cmd);
     public:
         ServoController(HardwareSerial& hardwareSerial);
         void begin();
@@ -99,6 +104,7 @@ class ServoController{
         void resetServo(unsigned char servoId);
         void restartServo(unsigned char servoId);
         void changeServoId(unsigned char servoId, unsigned char newId);
+        void saveFlashRom(unsigned char servoId);
         void reverseServoDirection(unsigned char servoId);
         void changeUSARTSpeed(unsigned char servoId, unsigned char speed);
         void setPacketReturnTime(unsigned char servoId, unsigned char time);
@@ -111,6 +117,7 @@ class ServoController{
         void setComplianceSlope(unsigned char servoId, unsigned char cw_slope, unsigned char ccw_slope);
         void setPunch(unsigned char servoId, unsigned char cw_punch, unsigned char ccw_punch);
 
+        short getCurrentReturnDelay(unsigned char servoId);
         short getCurrentAngle(unsigned char servoId);
         int getCurrentTime(unsigned char servoId);
         short getCurrentSpeed(unsigned char servoId);
